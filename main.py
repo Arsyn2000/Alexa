@@ -5,9 +5,10 @@ import datetime
 import wikipedia
 import pyjokes
 
+# Recognises your voice
 listener = sr.Recognizer()
 engine = pyttsx3.init()
-# Selecting a female voice
+# Selecting a female voice from 2 available voices
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
 
@@ -31,10 +32,15 @@ def user_talks():
             voice = listener.listen(source)
             # Audio to text
             command = listener.recognize_google(voice)
-            print("User:", command)
+            print("Length of Commad:", len(command))
+            if len(command) != 0:
+                print("User:", command)
     except:
         pass
-    return command
+    if len(command) != 0:
+        return command
+    else:
+        return ""
 
 
 def run_alexa():
@@ -48,29 +54,34 @@ def run_alexa():
         time = datetime.datetime.now().strftime('%H:%M:%S')
         print("Alexa: Current time is " + time)
         alexa_talks("Current time is " + time)
-    # elif "wikipidea" or "wiki" or "search" or "find" or "who is" or "what is" in command:
-    #     person = ""
-    #     if "wikipidea" in command:
-    #         person = command.replace("wikipidea", "")
-    #     if "wiki" in command:
-    #         person = command.replace("wiki", "")
-    #     if "search" in command:
-    #         person = command.replace("search", "")
-    #     if "find" in command:
-    #         person = command.replace("find", "")
-    #     if "who is" in command:
-    #         person = command.replace("who is", "")
-    #     if "what is" in command:
-    #         person = command.replace("what is", "")
-    #     info = wikipedia.summary(person, 3)
-    #     print(info)
-    #     alexa_talks(info)
     elif "joke" in command:
+        print("In tell me a joke")
         joke = pyjokes.get_joke()
         print(joke)
         alexa_talks(joke)
+    elif "wikipedia" or "wiki" or "search" or "find" or "who is" or "what is" in command:
+        person = ""
+        if "wikipedia" in command:
+            person = command.replace("wikipedia", "")
+        if "wiki" in command:
+            person = command.replace("wiki", "")
+        if "search" in command:
+            person = command.replace("search", "")
+        if "find" in command:
+            person = command.replace("find", "")
+        if "who is" in command:
+            person = command.replace("who is", "")
+        if "what is" in command:
+            person = command.replace("what is", "")
+        if len(person) != 0:
+            info = wikipedia.summary(person, 3)
+            print(info)
+            alexa_talks(info)
+        else:
+            print("Please say it again in wiki.")
     else:
         print("Please say it again.")
+        alexa_talks("Please say it again.")
 
 
 if __name__ == "__main__":
